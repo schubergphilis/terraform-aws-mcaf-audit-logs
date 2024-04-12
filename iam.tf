@@ -76,19 +76,19 @@ resource "aws_iam_policy" "terraform_secret_access" {
 resource "aws_iam_role_policy_attachment" "lambda_cloudwatch_group" {
   provider   = aws.audit
   policy_arn = aws_iam_policy.lambda_cloudwatch_group.arn
-  role       = module.terraform_cloud_audit_logs_lambda.name
+  role       = module.terraform_cloud_audit_logs_lambda.role_name
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_kms_access" {
   provider   = aws.audit
   policy_arn = aws_iam_policy.lambda_kms_access.arn
-  role       = module.terraform_cloud_audit_logs_lambda.name
+  role       = module.terraform_cloud_audit_logs_lambda.role_name
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_put_s3_bucket" {
   provider   = aws.audit
   policy_arn = aws_iam_policy.lambda_put_s3_bucket.arn
-  role       = module.terraform_cloud_audit_logs_lambda.name
+  role       = module.terraform_cloud_audit_logs_lambda.role_name
 }
 
 # resource "aws_iam_role_policy_attachment" "gitlab_secret_access" {
@@ -106,11 +106,11 @@ resource "aws_iam_role_policy_attachment" "lambda_put_s3_bucket" {
 resource "aws_iam_role_policy_attachment" "terraform_lambda_to_sqs" {
   provider   = aws.audit
   policy_arn = aws_iam_policy.terraform_lambda_to_sqs.arn
-  role       = module.terraform_cloud_audit_logs_lambda.name
+  role       = module.terraform_cloud_audit_logs_lambda.role_name
 }
 
 resource "aws_iam_role_policy_attachment" "terraform_secret_access" {
   provider   = aws.audit
   policy_arn = aws_iam_policy.terraform_secret_access.arn
-  role       = module.terraform_cloud_audit_logs_lambda.name
+  role       = module.terraform_cloud_audit_logs_lambda.role_name
 }

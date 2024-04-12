@@ -9,7 +9,7 @@ module "audit_logs_archive_bucket" {
   kms_key_arn       = var.kms_key_arn
 
   logging = {
-    target_bucket = "ep-audit-logs-logging-${local.account_id}"
+    target_bucket = module.audit_logs_archive_logging_bucket.name
     target_prefix = "ep-audit-logs/"
   }
 
@@ -111,19 +111,19 @@ module "lambda_deployment_package_bucket" {
   ]
 }
 
-#module "lambda_terraform_deployment_package" {
-#  providers                = { aws = aws.audit }
-#  source                   = "terraform-aws-modules/lambda/aws"
-#  version                  = "~> 6.4.0"
-#  create_function          = false
-#  recreate_missing_package = false
-#  runtime                  = "python3.12"
-#  s3_bucket                = module.lambda_deployment_package_bucket.name
-#  s3_object_storage_class  = "STANDARD"
-#  source_path              = "${path.module}/src/terraformcloud"
-#  store_on_s3              = true
-#  artifacts_dir            = "terraformcloud"
-#}
+module "lambda_terraform_deployment_package" {
+  providers                = { aws = aws.audit }
+  source                   = "terraform-aws-modules/lambda/aws"
+  version                  = "~> 7.2.5"
+  create_function          = false
+  recreate_missing_package = false
+  runtime                  = "python3.12"
+  s3_bucket                = module.lambda_deployment_package_bucket.name
+  s3_object_storage_class  = "STANDARD"
+  source_path              = "${path.module}/src/terraformcloud"
+  store_on_s3              = true
+  artifacts_dir            = "terraformcloud"
+}
 
 data "archive_file" "lambda_terraform_zip" {
   type        = "zip"
@@ -141,9 +141,10 @@ resource "aws_s3_object" "lambda_terraform_deployment_package" {
 
 module "terraform_cloud_audit_logs_lambda" {
   #checkov:skip=CKV_AWS_272:Code signing not used for now
-  providers              = { aws = aws.audit }
-  source                 = "schubergphilis/mcaf-lambda/aws"
-  version                = "~> 1.2.1"
+  providers = { aws = aws.audit }
+  #source                 = "schubergphilis/mcaf-lambda/aws"
+  #version                = "~> 1.2.1"
+  source                 = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=f-add-role-name-output" #TODO Pending https://github.com/schubergphilis/terraform-aws-mcaf-lambda/pull/73
   name                   = local.audit_lambda_names.terraform
   create_policy          = false
   create_s3_dummy_object = false
