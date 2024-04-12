@@ -17,3 +17,15 @@ variable "terraform_token" {
   type        = string
   description = "The Terraform Cloud token used to authenticate with the Terraform Cloud API"
 }
+
+variable "object_locking" {
+  type = object({
+    mode  = string
+    years = number
+  })
+  default = {
+    mode  = "GOVERNANCE"
+    years = 1
+  }
+  description = "The object locking configuration for the S3 buckets"
+}

@@ -2,8 +2,8 @@ module "audit_logs_archive_bucket" {
   providers         = { aws = aws.audit }
   source            = "github.com/schubergphilis/terraform-aws-mcaf-s3?ref=v0.11.0"
   name              = "ep-audit-logs-${local.account_id}"
-  object_lock_mode  = "COMPLIANCE"
-  object_lock_years = 1
+  object_lock_mode  = try(var.object_locking.mode, null)
+  object_lock_years = try(var.object_locking.years, null)
   versioning        = true
   tags              = {}
   kms_key_arn       = var.kms_key_arn
@@ -47,8 +47,8 @@ module "audit_logs_archive_logging_bucket" {
   providers         = { aws = aws.audit }
   source            = "github.com/schubergphilis/terraform-aws-mcaf-s3?ref=v0.11.0"
   name              = "ep-audit-logs-logging-${local.account_id}"
-  object_lock_mode  = "COMPLIANCE"
-  object_lock_years = 1
+  object_lock_mode  = try(var.object_locking.mode, null)
+  object_lock_years = try(var.object_locking.years, null)
   versioning        = true
   tags              = {}
   kms_key_arn       = var.kms_key_arn
