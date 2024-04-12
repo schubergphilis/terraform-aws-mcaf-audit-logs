@@ -1,7 +1,7 @@
 module "audit_logs_archive_bucket" {
   providers         = { aws = aws.audit }
   source            = "github.com/schubergphilis/terraform-aws-mcaf-s3?ref=v0.11.0"
-  name              = "ep-audit-logs-${local.account_id}"
+  name              = "${var.bucket_base_name}-${local.account_id}"
   object_lock_mode  = try(var.object_locking.mode, null)
   object_lock_years = try(var.object_locking.years, null)
   versioning        = true
@@ -46,7 +46,7 @@ module "audit_logs_archive_bucket" {
 module "audit_logs_archive_logging_bucket" {
   providers         = { aws = aws.audit }
   source            = "github.com/schubergphilis/terraform-aws-mcaf-s3?ref=v0.11.0"
-  name              = "ep-audit-logs-logging-${local.account_id}"
+  name              = "${var.bucket_base_name}-logging-${local.account_id}"
   object_lock_mode  = try(var.object_locking.mode, null)
   object_lock_years = try(var.object_locking.years, null)
   versioning        = true
@@ -86,7 +86,7 @@ module "audit_logs_archive_logging_bucket" {
 module "lambda_deployment_package_bucket" {
   providers   = { aws = aws.audit }
   source      = "github.com/schubergphilis/terraform-aws-mcaf-s3?ref=v0.11.0"
-  name        = "ep-audit-logs-lambda-deployments-${local.account_id}"
+  name        = "${var.bucket_base_name}-lambda-${local.account_id}"
   versioning  = true
   tags        = {}
   kms_key_arn = var.kms_key_arn
@@ -132,6 +132,7 @@ data "archive_file" "lambda_terraform_zip" {
 }
 
 resource "aws_s3_object" "lambda_terraform_deployment_package" {
+  provider   = aws.audit
   bucket     = module.lambda_deployment_package_bucket.name
   key        = "terraformcloud.zip"
   kms_key_id = var.kms_key_arn
@@ -153,7 +154,7 @@ module "terraform_cloud_audit_logs_lambda" {
   log_retention          = 365
   memory_size            = 512
   runtime                = "python3.12"
-  s3_bucket              = "ep-audit-logs-lambda-${local.account_id}" #TODO parameterise
+  s3_bucket              = "${var.bucket_base_name}-lambda-${local.account_id}"
   s3_key                 = aws_s3_object.lambda_terraform_deployment_package.key
   s3_object_version      = aws_s3_object.lambda_terraform_deployment_package.version_id
   source_code_hash       = data.archive_file.lambda_terraform_zip.output_base64sha256
