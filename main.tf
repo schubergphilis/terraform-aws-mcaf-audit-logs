@@ -117,7 +117,7 @@ module "lambda_terraform_deployment_package" {
   version                  = "~> 7.2.5"
   create_function          = false
   recreate_missing_package = false
-  runtime                  = "python3.12"
+  runtime                  = "python${python_version}"
   s3_bucket                = module.lambda_deployment_package_bucket.name
   s3_object_storage_class  = "STANDARD"
   source_path              = "${path.module}/src/terraformcloud"
@@ -154,7 +154,7 @@ module "terraform_cloud_audit_logs_lambda" {
   kms_key_arn            = var.kms_key_arn
   log_retention          = 365
   memory_size            = 512
-  runtime                = "python3.12"
+  runtime                = "python${python_version}"
   s3_bucket              = "${var.bucket_base_name}-lambda-${local.account_id}"
   s3_key                 = aws_s3_object.lambda_terraform_deployment_package.key
   s3_object_version      = aws_s3_object.lambda_terraform_deployment_package.version_id
@@ -177,7 +177,7 @@ module "terraform_cloud_audit_logs_lambda" {
 #  version                  = "~> 6.4.0"
 #  create_function          = false
 #  recreate_missing_package = false
-#  runtime                  = "python3.12"
+#  runtime                  = "python${python_version}"
 #  s3_bucket                = module.lambda_deployment_package_bucket.name
 #  s3_object_storage_class  = "STANDARD"
 #  source_path              = "src/gitlab"
@@ -191,7 +191,7 @@ module "terraform_cloud_audit_logs_lambda" {
 #  version                  = "~> 6.4.0"
 #  create_function          = false
 #  recreate_missing_package = false
-#  runtime                  = "python3.12"
+#  runtime                  = "python${python_version}"
 #  s3_bucket                = module.lambda_deployment_package_bucket.name
 #  s3_object_storage_class  = "STANDARD"
 #  source_path              = "src/okta"
@@ -214,7 +214,7 @@ module "terraform_cloud_audit_logs_lambda" {
 #   log_retention          = 365
 #   memory_size            = 512
 #   role_arn               = aws_iam_role.role_lambda_audit_logs["gitlab"].arn
-#   runtime                = "python3.12"
+#   runtime                = "python${python_version}"
 #   s3_bucket              = module.lambda_deployment_package_bucket.name
 #   s3_key                 = module.lambda_gitlab_deployment_package.s3_object.key
 #   s3_object_version      = module.lambda_gitlab_deployment_package.s3_object.version_id
@@ -245,7 +245,7 @@ module "terraform_cloud_audit_logs_lambda" {
 #  log_retention          = 365
 #  memory_size            = 512
 #  role_arn               = aws_iam_role.role_lambda_audit_logs["okta"].arn
-#  runtime                = "python3.12"
+#  runtime                = "python${python_version}"
 #  s3_bucket              = module.lambda_deployment_package_bucket.name
 #  s3_key                 = module.lambda_okta_deployment_package.s3_object.key
 #  s3_object_version      = module.lambda_okta_deployment_package.s3_object.version_id

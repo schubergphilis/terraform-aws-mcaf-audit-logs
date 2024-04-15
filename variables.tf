@@ -31,7 +31,14 @@ variable "okta_token" {
   description = "The Okta token used to authenticate with the Okta API"
 }
 
+variable "python_version" {
+  type        = string
+  default     = "3.12"
+  description = "The version of Python to use in the Lambda functions"
+}
+
 variable "terraform_token" {
   type        = string
   description = "The Terraform Cloud Organisation token used to authenticate with the Terraform Cloud API"
 }
+
