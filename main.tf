@@ -117,26 +117,25 @@ module "lambda_terraform_deployment_package" {
   version                  = "~> 7.2.5"
   create_function          = false
   recreate_missing_package = false
-  runtime                  = "python${python_version}"
-  s3_bucket                = module.lambda_deployment_package_bucket.name
-  s3_object_storage_class  = "STANDARD"
+  runtime                  = "python${var.python_version}"
   source_path              = "${path.module}/src/terraformcloud"
-  store_on_s3              = true
-  artifacts_dir            = "terraformcloud"
+  artifacts_dir            = "${path.root}/package/terraformcloud"
 }
 
-data "archive_file" "lambda_terraform_zip" {
-  type        = "zip"
-  source_dir  = "${path.module}/src/terraformcloud"
-  output_path = "${path.module}/src/terraformcloud.zip"
-}
+#data "archive_file" "lambda_terraform_zip" {
+#  type        = "zip"
+#  source_dir  = "${path.module}/src/terraformcloud"
+#  output_path = "${path.module}/src/terraformcloud.zip"
+#}
 
 resource "aws_s3_object" "lambda_terraform_deployment_package" {
-  provider   = aws.audit
-  bucket     = module.lambda_deployment_package_bucket.name
-  key        = "terraformcloud.zip"
+  provider = aws.audit
+  bucket   = module.lambda_deployment_package_bucket.name
+  # key        = "terraformcloud.zip"
+  key        = "terraformcloud/${element(split("/", module.lambda_terraform_deployment_package.local_filename), length(split("/", module.lambda_terraform_deployment_package.local_filename)) - 1)}"
   kms_key_id = var.kms_key_arn
-  source     = data.archive_file.lambda_terraform_zip.output_path
+  #  source     = data.archive_file.lambda_terraform_zip.output_path
+  source = module.lambda_terraform_deployment_package.local_filename
 }
 
 module "terraform_cloud_audit_logs_lambda" {
@@ -148,19 +147,21 @@ module "terraform_cloud_audit_logs_lambda" {
   name                   = local.audit_lambda_names.terraform
   create_policy          = false
   create_s3_dummy_object = false
-  description            = "Lambda for gathering audit logs from terraform cloud and storing them in S3"
-  filename               = data.archive_file.lambda_terraform_zip.output_path
-  handler                = "${local.audit_lambda_names.terraform}.handler"
-  kms_key_arn            = var.kms_key_arn
-  log_retention          = 365
-  memory_size            = 512
-  runtime                = "python${python_version}"
-  s3_bucket              = "${var.bucket_base_name}-lambda-${local.account_id}"
-  s3_key                 = aws_s3_object.lambda_terraform_deployment_package.key
-  s3_object_version      = aws_s3_object.lambda_terraform_deployment_package.version_id
-  source_code_hash       = data.archive_file.lambda_terraform_zip.output_base64sha256
-  tags                   = {}
-  timeout                = 600
+  description            = "Lambda for gathering audit logs from Terraform Cloud and storing them in S3"
+  # filename               = data.archive_file.lambda_terraform_zip.output_path
+  # filename      = module.lambda_terraform_deployment_package.local_filename
+  handler       = "${local.audit_lambda_names.terraform}.handler"
+  kms_key_arn   = var.kms_key_arn
+  log_retention = 365
+  memory_size   = 512
+  runtime       = "python${var.python_version}"
+  s3_bucket     = "${var.bucket_base_name}-lambda-${local.account_id}"
+  # s3_key            = aws_s3_object.lambda_terraform_deployment_package.key
+  s3_key            = "terraformcloud/${element(split("/", module.lambda_terraform_deployment_package.local_filename), length(split("/", module.lambda_terraform_deployment_package.local_filename)) - 1)}"
+  s3_object_version = aws_s3_object.lambda_terraform_deployment_package.version_id
+  source_code_hash  = aws_s3_object.lambda_terraform_deployment_package.checksum_sha256
+  tags              = {}
+  timeout           = 600
 
   environment = {
     token_secret_name = local.environment.terraform_token_secret
@@ -177,7 +178,7 @@ module "terraform_cloud_audit_logs_lambda" {
 #  version                  = "~> 6.4.0"
 #  create_function          = false
 #  recreate_missing_package = false
-#  runtime                  = "python${python_version}"
+#  runtime                  = "python${var.python_version}"
 #  s3_bucket                = module.lambda_deployment_package_bucket.name
 #  s3_object_storage_class  = "STANDARD"
 #  source_path              = "src/gitlab"
@@ -191,7 +192,7 @@ module "terraform_cloud_audit_logs_lambda" {
 #  version                  = "~> 6.4.0"
 #  create_function          = false
 #  recreate_missing_package = false
-#  runtime                  = "python${python_version}"
+#  runtime                  = "python${var.python_version}"
 #  s3_bucket                = module.lambda_deployment_package_bucket.name
 #  s3_object_storage_class  = "STANDARD"
 #  source_path              = "src/okta"
@@ -214,7 +215,7 @@ module "terraform_cloud_audit_logs_lambda" {
 #   log_retention          = 365
 #   memory_size            = 512
 #   role_arn               = aws_iam_role.role_lambda_audit_logs["gitlab"].arn
-#   runtime                = "python${python_version}"
+#   runtime                = "python${var.python_version}"
 #   s3_bucket              = module.lambda_deployment_package_bucket.name
 #   s3_key                 = module.lambda_gitlab_deployment_package.s3_object.key
 #   s3_object_version      = module.lambda_gitlab_deployment_package.s3_object.version_id
@@ -245,7 +246,7 @@ module "terraform_cloud_audit_logs_lambda" {
 #  log_retention          = 365
 #  memory_size            = 512
 #  role_arn               = aws_iam_role.role_lambda_audit_logs["okta"].arn
-#  runtime                = "python${python_version}"
+#  runtime                = "python${var.python_version}"
 #  s3_bucket              = module.lambda_deployment_package_bucket.name
 #  s3_key                 = module.lambda_okta_deployment_package.s3_object.key
 #  s3_object_version      = module.lambda_okta_deployment_package.s3_object.version_id
