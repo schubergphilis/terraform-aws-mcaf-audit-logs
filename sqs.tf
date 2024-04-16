@@ -1,3 +1,4 @@
+# SQS is only used for terraform audit logs
 resource "aws_lambda_event_source_mapping" "terraform_audit_sqs_trigger" {
   provider         = aws.audit
   batch_size       = 1

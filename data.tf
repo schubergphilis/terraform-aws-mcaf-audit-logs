@@ -1,22 +1,9 @@
+# Generic
 data "aws_region" "current" {}
 
 data "aws_caller_identity" "audit" {
   provider = aws.audit
 }
-
-#data "aws_iam_policy_document" "gitlab_secret_access" {
-#  statement {
-#    sid = "AllowGitlabTokenSecret"
-#    actions = [
-#      "secretsmanager:GetSecretValue",
-#      "secretsmanager:DescribeSecret",
-#    ]
-#    effect = "Allow"
-#    resources = [
-#      aws_secretsmanager_secret.gitlab_token_secret.arn
-#    ]
-#  }
-#}
 
 data "aws_iam_policy_document" "lambda_kms_access" {
   statement {
@@ -68,6 +55,7 @@ data "aws_iam_policy_document" "log_group_audit_logs" {
   }
 }
 
+# Terraform
 data "aws_iam_policy_document" "terraform_lambda_to_sqs" {
   statement {
     sid = "TerraformLambdaToFromSQS"
@@ -101,6 +89,7 @@ data "aws_iam_policy_document" "terraform_secret_access" {
   }
 }
 
+# Okta
 data "aws_iam_policy_document" "okta_secret_access" {
   statement {
     sid = "AllowGitlabTokenSecret"
@@ -114,3 +103,19 @@ data "aws_iam_policy_document" "okta_secret_access" {
     ]
   }
 }
+
+## Gitlab
+#data "aws_iam_policy_document" "gitlab_secret_access" {
+#  statement {
+#    sid = "AllowGitlabTokenSecret"
+#    actions = [
+#      "secretsmanager:GetSecretValue",
+#      "secretsmanager:DescribeSecret",
+#    ]
+#    effect = "Allow"
+#    resources = [
+#      aws_secretsmanager_secret.gitlab_token_secret.arn
+#    ]
+#  }
+#}
+

@@ -5,6 +5,7 @@ locals {
   }
 }
 
+# Terraform
 module "lambda_terraform_deployment_package" {
   providers                = { aws = aws.audit }
   source                   = "terraform-aws-modules/lambda/aws"
@@ -55,6 +56,7 @@ module "terraform_cloud_audit_logs_lambda" {
   }
 }
 
+# Okta
 module "lambda_okta_deployment_package" {
   providers                = { aws = aws.audit }
   source                   = "terraform-aws-modules/lambda/aws"
@@ -104,19 +106,28 @@ module "okta_audit_logs_lambda" {
   }
 }
 
-#module "lambda_gitlab_deployment_package" {
-#  providers                = { aws = aws.audit }
-#  source                   = "terraform-aws-modules/lambda/aws"
-#  version                  = "~> 6.4.0"
-#  create_function          = false
-#  recreate_missing_package = false
-#  runtime                  = "python${var.python_version}"
-#  s3_bucket                = module.lambda_deployment_package_bucket.name
-#  s3_object_storage_class  = "STANDARD"
-#  source_path              = "src/gitlab"
-#  store_on_s3              = true
-#  artifacts_dir            = "gitlab"
-#}
+# # Gitlab
+# module "lambda_gitlab_deployment_package" {
+#   providers                = { aws = aws.audit }
+#   source                   = "terraform-aws-modules/lambda/aws"
+#   version                  = "~> 6.4.0"
+#   create_function          = false
+#   recreate_missing_package = false
+#   runtime                  = "python${var.python_version}"
+#   s3_bucket                = module.lambda_deployment_package_bucket.name
+#   s3_object_storage_class  = "STANDARD"
+#   source_path              = "src/gitlab"
+#   store_on_s3              = true
+#   artifacts_dir            = "gitlab"
+# }
+# 
+# resource "aws_s3_object" "lambda_okta_deployment_package" {
+#   provider   = aws.audit
+#   bucket     = module.lambda_deployment_package_bucket.name
+#   key        = local.s3_object_keys.okta
+#   kms_key_id = var.kms_key_arn
+#   source     = module.lambda_okta_deployment_package.local_filename
+# }
 #
 # module "gitlab_audit_logs_lambda" {
 #   #checkov:skip=CKV_AWS_272:Code signing not used for now

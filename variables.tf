@@ -41,4 +41,3 @@ variable "terraform_token" {
   type        = string
   description = "The Terraform Cloud Organisation token used to authenticate with the Terraform Cloud API"
 }
-
