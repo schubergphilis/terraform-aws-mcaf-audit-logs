@@ -1,5 +1,18 @@
 # terraform-aws-mcaf-audit-lambdas
 
+This module installs three Lambdas to obtain audit logs from the sources:
+* Terraform Cloud (Plus needed to see audit logs)
+* Okta
+* Gitlab
+
+Furthermore, three S3 buckets will be used for; (1) storing the logs, (2) storing the lambda code, (3) functional logging bucket.
+
+The Lambdas are triggered by a scheduled Lambda event.
+
+## Installation
+This modules is intented to run in the core-audit account, when you use Control Tower.
+The KMS policy within the running account needs to be updated with to allow the permissions as shown in the code snippet below.
+
 ## Required update on Audit KMS key
 ```
 data "aws_iam_policy_document" "kms_allow_secretsmanager" {
@@ -91,7 +104,7 @@ data "aws_iam_policy_document" "kms_allow_secretsmanager" {
   }
 
   statement {
-    sid = "Allow reading encrypted deploymentCloudWatch to use the KMS key"
+    sid = "Allow CT execution to use the KMS key"
 
     principals {
       type        = "AWS"
@@ -113,6 +126,34 @@ data "aws_iam_policy_document" "kms_allow_secretsmanager" {
 
       values = [
         "arn:aws:iam::${data.aws_caller_identity.audit.account_id}:role/AWSControlTowerExecution"
+      ]
+    }
+  }
+
+  statement {
+    sid = "Allow the audit Lambda to use the KMS key"
+
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+
+    actions = [
+      "kms:Decrypt",
+      "kms:Encrypt",
+      "kms:GenerateDataKey"
+    ]
+
+    resources = [
+      "*"
+    ]
+
+    condition {
+      test     = "ArnLike"
+      variable = "aws:PrincipalArn"
+
+      values = [
+        "arn:aws:iam::${data.aws_caller_identity.audit.account_id}:role/LambdaRole-*_cloud_audit_logs"
       ]
     }
   }
