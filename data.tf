@@ -6,6 +6,8 @@ data "aws_caller_identity" "audit" {
 }
 
 data "aws_iam_policy_document" "lambda_kms_access" {
+  #checkov:skip=CKV_AWS_111: Access should be limited on KMS key
+  #checkov:skip=CKV_AWS_356: Access should be limited on KMS key
   statement {
     sid = "LambdaKMSAccess"
     actions = [
@@ -24,7 +26,6 @@ data "aws_iam_policy_document" "lambda_kms_access" {
 
 }
 
-#tfsec:ignore:aws-iam-no-policy-wildcards
 data "aws_iam_policy_document" "lambda_to_s3" {
   statement {
     sid     = "LambdaUploadToS3"
@@ -38,7 +39,6 @@ data "aws_iam_policy_document" "lambda_to_s3" {
   }
 }
 
-#tfsec:ignore:aws-iam-no-policy-wildcards
 data "aws_iam_policy_document" "log_group_audit_logs" {
   statement {
     sid = "TrustEventsToStoreLogEvent"

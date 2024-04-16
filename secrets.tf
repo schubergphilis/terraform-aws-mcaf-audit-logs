@@ -1,6 +1,7 @@
 
 # Terraform
 resource "aws_secretsmanager_secret" "terraform_token_secret" {
+  #checkov:skip=CKV2_AWS_57: The secrets are managed outside AWS
   provider   = aws.audit
   name       = local.environment.terraform_token_secret
   kms_key_id = var.kms_key_arn
@@ -14,6 +15,7 @@ resource "aws_secretsmanager_secret_version" "terraform_token_secret_version" {
 
 # Okta
 resource "aws_secretsmanager_secret" "okta_token_secret" {
+  #checkov:skip=CKV2_AWS_57: The secrets are managed outside AWS
   provider   = aws.audit
   name       = local.environment.okta_token_secret
   kms_key_id = var.kms_key_arn
@@ -27,6 +29,7 @@ resource "aws_secretsmanager_secret_version" "okta_token_secret_version" {
 
 # Gitlab
 resource "aws_secretsmanager_secret" "gitlab_token_secret" {
+  #checkov:skip=CKV2_AWS_57: The secrets are managed outside AWS
   provider   = aws.audit
   name       = local.environment.gitlab_token_secret
   kms_key_id = var.kms_key_arn

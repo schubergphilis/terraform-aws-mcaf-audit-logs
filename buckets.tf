@@ -1,6 +1,8 @@
 module "audit_logs_archive_bucket" {
+  #checkov:skip=CKV_TF_1:Registry uses commit hash (tags) as version
   providers         = { aws = aws.audit }
-  source            = "github.com/schubergphilis/terraform-aws-mcaf-s3?ref=v0.11.0"
+  source            = "schubergphilis/mcaf-s3/aws"
+  version           = "0.13.1"
   name              = "${var.bucket_base_name}-${local.account_id}"
   object_lock_mode  = try(var.object_locking.mode, null)
   object_lock_years = try(var.object_locking.years, null)
@@ -44,8 +46,10 @@ module "audit_logs_archive_bucket" {
 }
 
 module "audit_logs_archive_logging_bucket" {
+  #checkov:skip=CKV_TF_1:Registry uses commit hash (tags) as version
   providers         = { aws = aws.audit }
-  source            = "github.com/schubergphilis/terraform-aws-mcaf-s3?ref=v0.11.0"
+  source            = "schubergphilis/mcaf-s3/aws"
+  version           = "0.13.1"
   name              = "${var.bucket_base_name}-logging-${local.account_id}"
   object_lock_mode  = try(var.object_locking.mode, null)
   object_lock_years = try(var.object_locking.years, null)
@@ -84,8 +88,10 @@ module "audit_logs_archive_logging_bucket" {
 }
 
 module "lambda_deployment_package_bucket" {
+  #checkov:skip=CKV_TF_1:Registry uses commit hash (tags) as version
   providers   = { aws = aws.audit }
-  source      = "github.com/schubergphilis/terraform-aws-mcaf-s3?ref=v0.11.0"
+  source      = "schubergphilis/mcaf-s3/aws"
+  version     = "0.13.1"
   name        = "${var.bucket_base_name}-lambda-${local.account_id}"
   versioning  = true
   tags        = {}

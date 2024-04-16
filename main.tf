@@ -8,6 +8,7 @@ locals {
 
 # Terraform
 module "lambda_terraform_deployment_package" {
+  #checkov:skip=CKV_TF_1:Registry uses commit hash (tags) as version
   providers                = { aws = aws.audit }
   source                   = "terraform-aws-modules/lambda/aws"
   version                  = "~> 7.2.5"
@@ -27,7 +28,7 @@ resource "aws_s3_object" "lambda_terraform_deployment_package" {
 }
 
 module "terraform_cloud_audit_logs_lambda" {
-  #checkov:skip=CKV_AWS_272:Code signing not used for now
+  #checkov:skip=CKV_TF_1:Registry uses commit hash (tags) as version
   providers = { aws = aws.audit }
   #source                 = "schubergphilis/mcaf-lambda/aws"
   #version                = "~> 1.2.1"
@@ -59,6 +60,7 @@ module "terraform_cloud_audit_logs_lambda" {
 
 # Okta
 module "lambda_okta_deployment_package" {
+  #checkov:skip=CKV_TF_1:Registry uses commit hash (tags) as version
   providers                = { aws = aws.audit }
   source                   = "terraform-aws-modules/lambda/aws"
   version                  = "~> 7.2.5"
@@ -78,7 +80,7 @@ resource "aws_s3_object" "lambda_okta_deployment_package" {
 }
 
 module "okta_audit_logs_lambda" {
-  #checkov:skip=CKV_AWS_272:Code signing not used for now
+  #checkov:skip=CKV_TF_1:Registry uses commit hash (tags) as version
   providers = { aws = aws.audit }
   #source                 = "schubergphilis/mcaf-lambda/aws"
   #version                = "~> 1.2.1"
@@ -109,6 +111,7 @@ module "okta_audit_logs_lambda" {
 
 # Gitlab
 module "lambda_gitlab_deployment_package" {
+  #checkov:skip=CKV_TF_1:Registry uses commit hash (tags) as version
   providers                = { aws = aws.audit }
   source                   = "terraform-aws-modules/lambda/aws"
   version                  = "~> 7.2.5"
@@ -128,7 +131,7 @@ resource "aws_s3_object" "lambda_gitlab_deployment_package" {
 }
 
 module "gitlab_audit_logs_lambda" {
-  #checkov:skip=CKV_AWS_272:Code signing not used for now
+  #checkov:skip=CKV_TF_1:Registry uses commit hash (tags) as version
   providers = { aws = aws.audit }
   #source                 = "schubergphilis/mcaf-lambda/aws"
   #version                = "~> 1.2.1"
