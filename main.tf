@@ -29,10 +29,9 @@ resource "aws_s3_object" "lambda_terraform_deployment_package" {
 
 module "terraform_cloud_audit_logs_lambda" {
   #checkov:skip=CKV_TF_1:Registry uses commit hash (tags) as version
-  providers = { aws = aws.audit }
-  #source                 = "schubergphilis/mcaf-lambda/aws"
-  #version                = "~> 1.2.1"
-  source                 = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=f-add-role-name-output" #TODO Pending https://github.com/schubergphilis/terraform-aws-mcaf-lambda/pull/73
+  providers              = { aws = aws.audit }
+  source                 = "schubergphilis/mcaf-lambda/aws"
+  version                = "~> 1.3.0"
   name                   = local.audit_lambda_names.terraform
   create_policy          = false
   create_s3_dummy_object = false
@@ -81,10 +80,9 @@ resource "aws_s3_object" "lambda_okta_deployment_package" {
 
 module "okta_audit_logs_lambda" {
   #checkov:skip=CKV_TF_1:Registry uses commit hash (tags) as version
-  providers = { aws = aws.audit }
-  #source                 = "schubergphilis/mcaf-lambda/aws"
-  #version                = "~> 1.2.1"
-  source                 = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=f-add-role-name-output" #TODO Pending https://github.com/schubergphilis/okta-aws-mcaf-lambda/pull/73
+  providers              = { aws = aws.audit }
+  source                 = "schubergphilis/mcaf-lambda/aws"
+  version                = "~> 1.3.0"
   name                   = local.audit_lambda_names.okta
   create_policy          = false
   create_s3_dummy_object = false
@@ -132,10 +130,9 @@ resource "aws_s3_object" "lambda_gitlab_deployment_package" {
 
 module "gitlab_audit_logs_lambda" {
   #checkov:skip=CKV_TF_1:Registry uses commit hash (tags) as version
-  providers = { aws = aws.audit }
-  #source                 = "schubergphilis/mcaf-lambda/aws"
-  #version                = "~> 1.2.1"
-  source                 = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=f-add-role-name-output" #TODO Pending https://github.com/schubergphilis/gitlab-aws-mcaf-lambda/pull/73
+  providers              = { aws = aws.audit }
+  source                 = "schubergphilis/mcaf-lambda/aws"
+  version                = "~> 1.3.0"
   name                   = local.audit_lambda_names.gitlab
   create_policy          = false
   create_s3_dummy_object = false
