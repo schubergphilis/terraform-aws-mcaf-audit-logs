@@ -1,12 +1,12 @@
 locals {
   audit_lambdas = {
-    #    gitlab = "GitLab"
+    gitlab    = "GitLab"
     terraform = "TerraformCloud"
     okta      = "Okta"
   }
 
   audit_lambda_names = {
-    #    gitlab = "gitlab_audit_logs"
+    gitlab    = "gitlab_audit_logs"
     terraform = "terraform_cloud_audit_logs"
     okta      = "okta_audit_logs"
   }

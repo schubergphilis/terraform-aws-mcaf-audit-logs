@@ -85,19 +85,17 @@ resource "aws_iam_role_policy_attachment" "okta_secret_access" {
   role       = module.okta_audit_logs_lambda.role_name
 }
 
-# # Gitlab
-# resource "aws_iam_role_policy_attachment" "gitlab_secret_access" {
-#   provider   = aws.audit
-#   policy_arn = aws_iam_policy.gitlab_secret_access.arn
-#   role       = aws_iam_role.role_lambda_audit_logs["gitlab"].name
-# }
-# 
+# Gitlab
+resource "aws_iam_policy" "gitlab_secret_access" {
+  provider    = aws.audit
+  name        = "PolicyAllowGitlabTokenSecret"
+  description = "Policy allowing lambda to read token from secrets"
+  path        = "/"
+  policy      = data.aws_iam_policy_document.gitlab_secret_access.json
+}
 
-#resource "aws_iam_policy" "gitlab_secret_access" {
-#  provider    = aws.audit
-#  name        = "PolicyAllowGitlabTokenSecret"
-#  description = "Policy allowing lambda to read token from secrets"
-#  path        = "/"
-#  policy      = data.aws_iam_policy_document.gitlab_secret_access.json
-#}
-#
+resource "aws_iam_role_policy_attachment" "gitlab_secret_access" {
+  provider   = aws.audit
+  policy_arn = aws_iam_policy.gitlab_secret_access.arn
+  role       = module.gitlab_audit_logs_lambda.role_name
+}

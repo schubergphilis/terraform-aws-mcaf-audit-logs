@@ -104,18 +104,17 @@ data "aws_iam_policy_document" "okta_secret_access" {
   }
 }
 
-## Gitlab
-#data "aws_iam_policy_document" "gitlab_secret_access" {
-#  statement {
-#    sid = "AllowGitlabTokenSecret"
-#    actions = [
-#      "secretsmanager:GetSecretValue",
-#      "secretsmanager:DescribeSecret",
-#    ]
-#    effect = "Allow"
-#    resources = [
-#      aws_secretsmanager_secret.gitlab_token_secret.arn
-#    ]
-#  }
-#}
-
+# Gitlab
+data "aws_iam_policy_document" "gitlab_secret_access" {
+  statement {
+    sid = "AllowGitlabTokenSecret"
+    actions = [
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret",
+    ]
+    effect = "Allow"
+    resources = [
+      aws_secretsmanager_secret.gitlab_token_secret.arn
+    ]
+  }
+}

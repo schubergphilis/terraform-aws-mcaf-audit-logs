@@ -46,15 +46,15 @@ resource "aws_cloudwatch_event_target" "okta_audit_trigger_daily" {
   }
 }
 
-# # Gitlab
-# resource "aws_cloudwatch_event_target" "gitlab_audit_trigger_daily" {
-#   provider  = aws.audit
-#   arn       = module.gitlab_audit_logs_lambda.arn
-#   rule      = aws_cloudwatch_event_rule.audit_trigger_daily.name
-#   target_id = "gitlab_audit_logs_lambda"
-# 
-#   retry_policy {
-#     maximum_retry_attempts       = 3
-#     maximum_event_age_in_seconds = 60
-#   }
-# }
+# Gitlab
+resource "aws_cloudwatch_event_target" "gitlab_audit_trigger_daily" {
+  provider  = aws.audit
+  arn       = module.gitlab_audit_logs_lambda.arn
+  rule      = aws_cloudwatch_event_rule.audit_trigger_daily.name
+  target_id = "gitlab_audit_logs_lambda"
+
+  retry_policy {
+    maximum_retry_attempts       = 3
+    maximum_event_age_in_seconds = 60
+  }
+}
