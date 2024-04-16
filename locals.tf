@@ -2,12 +2,12 @@ locals {
   audit_lambdas = {
     #    gitlab = "GitLab"
     terraform = "TerraformCloud"
-    #    okta      = "Okta"
+    okta      = "Okta"
   }
   audit_lambda_names = {
     #    gitlab = "gitlab_audit_logs"
     terraform = "terraform_cloud_audit_logs"
-    #    okta      = "okta_audit_logs"
+    okta      = "okta_audit_logs"
   }
   environment = {
     gitlab_api_url         = "https://gitlab.com/api/v4"

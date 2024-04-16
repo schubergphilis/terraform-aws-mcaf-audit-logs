@@ -33,25 +33,25 @@ resource "aws_cloudwatch_event_target" "terraform_audit_trigger_daily" {
   }
 }
 
-# resource "aws_cloudwatch_event_target" "okta_audit_trigger_daily" {
-#   provider  = aws.audit
-#   arn       = module.okta_audit_logs_lambda.arn
-#   rule      = aws_cloudwatch_event_rule.audit_trigger_daily.name
-#   target_id = "okta_audit_logs_lambda"
-# 
-#   retry_policy {
-#     maximum_retry_attempts       = 3
-#     maximum_event_age_in_seconds = 60
-#   }
-# }
+resource "aws_cloudwatch_event_target" "okta_audit_trigger_daily" {
+  provider  = aws.audit
+  arn       = module.okta_audit_logs_lambda.arn
+  rule      = aws_cloudwatch_event_rule.audit_trigger_daily.name
+  target_id = "okta_audit_logs_lambda"
+
+  retry_policy {
+    maximum_retry_attempts       = 3
+    maximum_event_age_in_seconds = 60
+  }
+}
 
 resource "aws_lambda_permission" "allow_cloudwatch_to_invoke_audit_lambda" {
-  for_each     = local.audit_lambdas
-  provider     = aws.audit
-  statement_id = "Allow${each.value}AuditLambdaExecutionFromCloudWatch"
-  action       = "lambda:InvokeFunction"
-  #function_name = local.audit_lambda_names[each.key]
-  function_name = module.terraform_cloud_audit_logs_lambda.name
-  principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.audit_trigger_daily.arn
+  for_each      = local.audit_lambdas
+  provider      = aws.audit
+  statement_id  = "Allow${each.value}AuditLambdaExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = local.audit_lambda_names[each.key]
+  #function_name = module.terraform_cloud_audit_logs_lambda.name
+  principal  = "events.amazonaws.com"
+  source_arn = aws_cloudwatch_event_rule.audit_trigger_daily.arn
 }

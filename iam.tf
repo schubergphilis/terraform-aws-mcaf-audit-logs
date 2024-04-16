@@ -6,14 +6,14 @@
 #  policy      = data.aws_iam_policy_document.gitlab_secret_access.json
 #}
 #
-#resource "aws_iam_policy" "okta_secret_access" {
-#  provider    = aws.audit
-#  name        = "PolicyAllowOktaTokenSecret"
-#  description = "Policy allowing lambda to read token from secrets"
-#  path        = "/"
-#  policy      = data.aws_iam_policy_document.okta_secret_access.json
-#}
-#
+resource "aws_iam_policy" "okta_secret_access" {
+  provider    = aws.audit
+  name        = "PolicyAllowOktaTokenSecret"
+  description = "Policy allowing lambda to read token from secrets"
+  path        = "/"
+  policy      = data.aws_iam_policy_document.okta_secret_access.json
+}
+
 resource "aws_iam_policy" "lambda_cloudwatch_group" {
   provider    = aws.audit
   name        = "PolicyLambdaCloudWatchLogGroup"
@@ -97,11 +97,11 @@ resource "aws_iam_role_policy_attachment" "lambda_put_s3_bucket" {
 #   role       = aws_iam_role.role_lambda_audit_logs["gitlab"].name
 # }
 # 
-# resource "aws_iam_role_policy_attachment" "okta_secret_access" {
-#   provider   = aws.audit
-#   policy_arn = aws_iam_policy.okta_secret_access.arn
-#   role       = aws_iam_role.role_lambda_audit_logs["okta"].name
-# }
+resource "aws_iam_role_policy_attachment" "okta_secret_access" {
+  provider   = aws.audit
+  policy_arn = aws_iam_policy.okta_secret_access.arn
+  role       = module.okta_audit_logs_lambda.role_name
+}
 
 resource "aws_iam_role_policy_attachment" "terraform_lambda_to_sqs" {
   provider   = aws.audit
