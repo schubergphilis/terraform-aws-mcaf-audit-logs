@@ -11,6 +11,10 @@ locals {
     okta      = "okta_audit_logs"
   }
 
+  audit_lambdas_names2 = {
+    terraform = "terraform_cloud_audit_logs"
+  }
+
   environment = {
     gitlab_api_url         = "https://gitlab.com/api/v4"
     gitlab_token_secret    = "/audit-log-tokens/gitlab"

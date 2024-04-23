@@ -29,17 +29,19 @@ resource "aws_s3_object" "lambda_terraform_deployment_package" {
 
 module "terraform_cloud_audit_logs_lambda" {
   #checkov:skip=CKV_TF_1:Registry uses commit hash (tags) as version
-  providers              = { aws = aws.audit }
-  source                 = "schubergphilis/mcaf-lambda/aws"
-  version                = "~> 1.3.0"
-  name                   = local.audit_lambda_names.terraform
-  create_policy          = false
+  providers = { aws = aws.audit }
+  #  source                 = "schubergphilis/mcaf-lambda/aws"
+  #  version                = "~> 1.3.0"
+  source = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=fvb%2Frole-refactor"
+  name   = local.audit_lambda_names.terraform
+  # create_policy          = false
   create_s3_dummy_object = false
   description            = "Lambda for gathering audit logs from Terraform Cloud and storing them in S3"
   handler                = "${local.audit_lambda_names.terraform}.handler"
   kms_key_arn            = var.kms_key_arn
   log_retention          = 365
   memory_size            = 512
+  role_arn               = module.lambda_role["terraform"].arn
   runtime                = "python${var.python_version}"
   s3_bucket              = "${var.bucket_base_name}-lambda-${local.account_id}"
   s3_key                 = local.s3_object_keys.terraform
